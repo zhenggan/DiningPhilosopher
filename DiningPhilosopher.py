@@ -4,6 +4,9 @@ from time import sleep
 from random import randint
 import threading
 
+#waiter to serve the philosophers
+waiter = threading.Lock()
+
 chopsticks = []
 for loop in range(0,5):
   chopsticks.append(threading.Lock())
@@ -16,17 +19,24 @@ class DiningPhilosopher(threading.Thread):
   def run(self):
     leftChopstick = self.philosopherID
     rightChopstick = (self.philosopherID + 1) % 5
-    print("philosopher: " + str(self.philosopherID))
+    #print("philosopher = " + (str)(self.philosopherID))
 
     while True:
       #think for random period of time
-      sleep(randint(1,10))
-
-      #chopsticks[leftChopstick].acquire()  #Currently results in deadlock duh
+      print("philosopher" + (str)(self.philosopherID) + "is thinking")
+      sleep(randint(1,2))
+		
+      waiter.acquire()
+      chopsticks[leftChopstick].acquire()
+      sleep(5)  #increase likelyhood of deadlock by making all philosophers pick up right at same time
+      chopsticks[rightChopstick].acquire()
+      waiter.release()
 
       #eat for random period of time
-      #sleep(randint(1,10)) 
-      #chopsticks[leftChopstick].release()
+      print("philosopher" + (str)(self.philosopherID) + "is eating")
+      sleep(randint(1,2)) 
+      chopsticks[leftChopstick].release()
+      chopsticks[rightChopstick].release()
   
 if __name__ == "__main__":
   philosophersList = []
