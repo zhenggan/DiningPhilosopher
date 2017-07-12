@@ -7,10 +7,12 @@ import threading
 #waiter to serve the philosophers
 waiter = threading.Lock()
 
+#chopsticks needed to eat!
 chopsticks = []
 for loop in range(0,5):
   chopsticks.append(threading.Lock())
 
+#Implement philosopher thread class as a child class of threading.Thread
 class DiningPhilosopher(threading.Thread):
   def __init__(self, philosopherID):
     threading.Thread.__init__(self)
@@ -19,7 +21,6 @@ class DiningPhilosopher(threading.Thread):
   def run(self):
     leftChopstick = self.philosopherID
     rightChopstick = (self.philosopherID + 1) % 5
-    #print("philosopher = " + (str)(self.philosopherID))
 
     while True:
       #think for random period of time
@@ -49,4 +50,4 @@ if __name__ == "__main__":
   for philosopher in philosophersList:
     philosopher.join()
 
-  print("Finish Running")
+  print("Finish Running") #Technically it never finishes running since infinite loop :)
